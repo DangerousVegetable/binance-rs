@@ -163,7 +163,10 @@ impl<'a> WebSockets<'a> {
                     Message::Ping(payload) => {
                         socket.0.write(Message::Pong(payload)).unwrap();
                     }
-                    Message::Pong(_) | Message::Binary(_) | Message::Frame(_) => (),
+                    Message::Pong(payload) => {
+                        socket.0.write(Message::Ping(payload)).unwrap();
+                    }
+                    Message::Binary(_) | Message::Frame(_) => (),
                     Message::Close(e) => bail!(format!("Disconnected {:?}", e)),
                 }
             }
