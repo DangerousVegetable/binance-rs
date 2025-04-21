@@ -6,13 +6,14 @@ use binance::websockets::*;
 use std::sync::atomic::{AtomicBool, Ordering};
 
 fn main() {
+    //env_logger::init();
     //user_stream();
     //user_stream_websocket();
     //market_websocket();
     //kline_websocket();
     //all_trades_websocket();
     //last_price_for_one_symbol();
-    // multiple_streams();
+    //multiple_streams();
 }
 
 fn user_stream() {
@@ -84,9 +85,15 @@ fn user_stream_websocket() {
 
 fn market_websocket() {
     let keep_running = AtomicBool::new(true); // Used to control the event loop
-    let agg_trade = String::from("ethbtc@aggTrade");
+    let agg_trade = String::from("ethusdt@aggTrade");
     let mut web_socket: WebSockets<'_> = WebSockets::new(|event: WebsocketEvent| {
         match event {
+            WebsocketEvent::AggrTrades(aggtrade) => {
+                println!(
+                    "Symbol: {}, price: {}, qty: {}",
+                    aggtrade.symbol, aggtrade.price, aggtrade.qty
+                );
+            }
             WebsocketEvent::Trade(trade) => {
                 println!(
                     "Symbol: {}, price: {}, qty: {}",
